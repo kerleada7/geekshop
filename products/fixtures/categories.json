@@ -1,0 +1,42 @@
+[
+  {
+    "model": "products.productcategory",
+    "id": 1,
+    "fields": {
+      "name": "Новинки",
+      "description": "Новые поступления"
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "id": 2,
+    "fields": {
+      "name": "Одежда",
+      "description": ""
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "id": 3,
+    "fields": {
+      "name": "Обувь",
+      "description": ""
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "id": 4,
+    "fields": {
+      "name": "Аксессуары",
+      "description": ""
+    }
+  },
+  {
+    "model": "products.productcategory",
+    "id": 5,
+    "fields": {
+      "name": "Подарки",
+      "description": ""
+    }
+  }
+]
