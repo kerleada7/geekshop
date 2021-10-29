@@ -8,7 +8,7 @@ from django.views.generic import FormView, UpdateView
 from basket.models import Basket
 from geekshop import settings
 from geekshop.mixin import UserActiveCheckMixin, BaseClassContextMixin
-from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 # Create your views here.
 from users.models import User
 
@@ -53,6 +53,7 @@ class ProfileFormView(UpdateView, UserActiveCheckMixin):
     def get_context_data(self, **kwargs):
         context = super(ProfileFormView, self).get_context_data(**kwargs)
         context['title'] = 'Профиль'
+        context['profile'] = UserProfileEditForm(instance=self.request.user.userprofile)
         context['basket'] = Basket.objects.filter(user=self.request.user)
         return context
 
