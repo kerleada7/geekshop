@@ -1,7 +1,10 @@
+import hashlib
+import random
+
+from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 
-from users.models import User
-from django import forms
+from users.models import User, UserProfile
 
 
 class UserLoginForm(AuthenticationForm):
@@ -24,14 +27,22 @@ class UserRegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs['placeholder'] = 'Имя'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Фамилия'
+        self.fields['first_name'].widget.attrs['placeholder'] = 'Иван'
+        self.fields['last_name'].widget.attrs['placeholder'] = 'Иванов'
         self.fields['username'].widget.attrs['placeholder'] = 'Имя пользователя'
-        self.fields['email'].widget.attrs['placeholder'] = 'уmail@mail.com'
-        self.fields['password1'].widget.attrs['placeholder'] = 'Новый пароль'
+        self.fields['email'].widget.attrs['placeholder'] = 'myemail@mail.ml'
+        self.fields['password1'].widget.attrs['placeholder'] = 'Придумайте пароль'
         self.fields['password2'].widget.attrs['placeholder'] = 'Повторите пароль'
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control py-4'
+
+    def save(self, commit=True):
+        user = super(UserRegisterForm, self).save()
+        user.is_active = False
+        salt = hashlib.sha1(str(random.random()).encode('utf8')).hexdigest()[:6]
+        user.activation_key = hashlib.sha1((user.email + salt).encode('utf8')).hexdigest()
+        user.save()
+        return user
 
 
 class UserProfileForm(UserChangeForm):
@@ -39,7 +50,7 @@ class UserProfileForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'image')
+        fields = ('first_name', 'last_name', 'username', 'email', 'image', 'age')
 
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
@@ -55,4 +66,19 @@ class UserProfileForm(UserChangeForm):
         data = self.cleaned_data['image']
         if data.size > 1024 * 1024:
             raise forms.ValidationError('Размер изображения слишком большой!')
-        return
+        return data
+
+
+class UserProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('tagline', 'about', 'gender')
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileEditForm, self).__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            if field_name != 'gender':
+                field.widget.attrs['class'] = 'form-control py-4'
+            else:
+                field.widget.attrs['class'] = 'form-control'
