@@ -6,6 +6,6 @@ app_name = 'products'
 
 urlpatterns = [
     path('', products, name='index'),
-    path('category/<int:id_category>/', products, name='product'),
+    path('category/<int:id_category>/', products, name='categories'),
     path('page/<int:page_id>', products, name='page'),
 ]

@@ -12,7 +12,7 @@
                 <h1 class="my-4">GeekShop</h1>
                 <div class="list-group">
                     {% for item in links_menu_categories %}
-                        <a href="{% url 'products:index' %}{{ item.id }}" class="list-group-item">{{ item.name }}</a>
+                        <a href="{% url 'products:categories' item.id %}" class="list-group-item">{{ item.name }}</a>
                     {% endfor %}
                 </div>
             </div>
